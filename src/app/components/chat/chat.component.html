@@ -1,0 +1,55 @@
+<form [formGroup]="form" class="chat-container">
+  <mat-card class="chat-card">
+    <mat-card-header class="chat-header">
+      <img mat-card-avatar src="./assets/bot.png" class="chat-icon">
+      <mat-card-title class="chat-title">Chatbot</mat-card-title>
+      <mat-card-subtitle class="chat-subtitle">
+        <div class="status-icon"></div>
+        <span>Online</span>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content class="chat-content" #messageContainer>
+      <!-- Display chat messages -->
+      <div *ngFor="let message of messages" class="messages">
+        <div [ngClass]="'message ' + message.type">
+          <ng-container *ngIf="message.isLink; else textContent">
+            <a [href]="message.text" target="_blank">{{ message.text }}</a>
+          </ng-container>
+          <ng-template #textContent>
+            {{ message.text }}
+          </ng-template>
+          
+          <!-- Timestamp -->
+          <div class="timestamp" [ngClass]="{ 'user': message.type === 'user', 'bot': message.type === 'bot' }">
+            {{ message.timestamp }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Options for the user to select after the initial message -->
+      <div *ngIf="showOptions" class="user-options">
+        <div class="highlighted-option" (click)="handleOptionClick('UI/UX Designing')">UI/UX Designing</div>
+        <div class="highlighted-option" (click)="handleOptionClick('Full Stack-PYTHON')">Full Stack-PYTHON</div>
+        <div class="highlighted-option" (click)="handleOptionClick('Full Stack-JAVA')">Full Stack-JAVA</div>
+
+        <div class="highlighted-option" (click)="handleOptionClick('Data Analytics')">Data Analytics</div>
+        <div class="highlighted-option" (click)="handleOptionClick('Digital Marketing')">Digital Marketing</div>
+        <div class="highlighted-option" (click)="handleOptionClick('MERN-Stack')">MERN-Stack</div>
+
+        <div class="highlighted-option" (click)="handleOptionClick('Data Science')">Data Science</div>
+        <div class="highlighted-option" (click)="handleOptionClick('Buisness Analytics')">Buisness Analytics</div>
+        <div class="highlighted-option" (click)="handleOptionClick('MEAN-Stack')">MEAN-Stack</div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions class="chat-actions">
+      <div class="chat-form">
+        <textarea matInput placeholder="Type your message..." formControlName="message" class="chat-input" (keydown.enter)="sendMessage()"></textarea>
+        <button mat-icon-button color="primary" (click)="sendMessage()" class="send-button">
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</form>
