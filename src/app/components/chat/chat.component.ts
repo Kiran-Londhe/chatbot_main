@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+//import { UserDataService } from 'src/app/Service/user-data.service';
 
 class Message {
   text: string;
@@ -15,6 +16,8 @@ class Message {
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
+  @ViewChild('messageContainer') messageContainer: ElementRef | undefined;  // Add ViewChild
+
   public form: FormGroup;
   public messages: Array<Message> = [];
   public showOptions = false;
@@ -57,6 +60,7 @@ export class ChatComponent implements OnInit {
       isLink
     });
     this.playMessageSound(); // Play sound when a bot message is displayed
+    this.scrollToBottom();  // Scroll to the bottom after message is added
   }
 
   // Play sound when a message is displayed
@@ -79,7 +83,17 @@ export class ChatComponent implements OnInit {
       this.form.get('message')?.setValue(''); // Clear the input field
 
       this.handleUserResponse(userMessageText.trim());
+      this.scrollToBottom();  // Scroll to the bottom after message is added
     }
+  }
+
+  // Scroll to the bottom of the chat container
+  private scrollToBottom(): void {
+    setTimeout(() => {
+      if (this.messageContainer) {
+        this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
+      }
+    }, 100);  // Timeout ensures DOM updates before scrolling
   }
 
   // Handle user responses based on the current step in the conversation
